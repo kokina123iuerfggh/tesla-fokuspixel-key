@@ -2,7 +2,7 @@
 
 Ein Symbol in der Menüleiste mit zwei Funktionen:
 
-1. **Screenshot aufnehmen und bearbeiten:** Bereich oder ganzen Bildschirm aufnehmen, dann mit Rahmen, Kreis, Pfeil, Linie, Stift, Textmarker und Text markieren und als PNG speichern oder in die Zwischenablage kopieren.
+1. **Screenshot aufnehmen und bearbeiten:** Bereich oder ganzen Bildschirm aufnehmen, dann bearbeiten und als PNG speichern oder in die Zwischenablage kopieren. Werkzeuge: Auswählen und Verschieben, Pfeil, Linie, Rahmen, Kreis, Stift, Textmarker, Text, Verpixeln (für sensible Stellen), nummerierte Markierung und Zuschneiden. Dazu neun Farben, eigene Farbe, Stärkeregler, Rückgängig und Wiederholen.
 2. **Mauszeiger hervorheben:** Ein gelber Leuchtkreis folgt dem Mauszeiger, damit Zuschauer ihn bei Bildschirmübertragungen besser sehen. Beim Klicken wird der Kreis rot.
 
 Alles läuft lokal auf dem Mac, ohne Claude und ohne Internet.
@@ -38,7 +38,7 @@ Nach dem Erteilen die App neu starten. Ohne Eingabeüberwachung funktionieren Me
 
 - **Menüleistensymbol:** Bereich aufnehmen, ganzen Bildschirm aufnehmen, Mauszeiger hervorheben, Ordner öffnen, Beenden.
 - **Tastenkürzel:** `Ctrl+Alt+S` Bereich aufnehmen, `Ctrl+Alt+M` Mauszeiger-Hervorhebung ein/aus. Mit `--no-hotkeys` abschaltbar.
-- **Editor:** Werkzeug oben wählen und im Bild ziehen. Farbe und Stärke einstellbar. `Cmd+Z` macht den letzten Schritt rückgängig, `Cmd+S` speichert, `Cmd+C` kopiert.
+- **Editor:** Werkzeug unten wählen und im Bild ziehen. Nummern und Text setzt du per Klick. Mit dem Auswahl-Werkzeug verschiebst du Markierungen, `Entf` löscht die gewählte. `Cmd+Z` macht rückgängig, `Cmd+Shift+Z` wiederholt, `Cmd+S` oder „Sichern“ speichert, `Cmd+C` oder „Kopieren“ kopiert, `Cmd+Shift+S` speichert unter. „Verwerfen“ schließt ohne zu speichern.
 - **Speicherort:** Standardmäßig `~/Pictures/Screenshots`, änderbar mit `--save-dir ORDNER`.
 
 ## Bekannte Grenzen

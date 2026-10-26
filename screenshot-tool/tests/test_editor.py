@@ -78,6 +78,80 @@ class CanvasTest(unittest.TestCase):
         self.assertTrue(non_white)
 
 
+class NewToolsTest(unittest.TestCase):
+    def test_redo_restores_undone_item(self):
+        canvas = Canvas(white_pixmap())
+        canvas.color = QColor("#ff0000")
+        draw(canvas, "rect", (20, 20), (100, 80))
+        canvas.undo()
+        self.assertEqual(canvas.annotation_count(), 0)
+        canvas.redo()
+        self.assertEqual(canvas.annotation_count(), 1)
+        self.assertEqual(canvas.render_image().pixelColor(20, 50), QColor("#ff0000"))
+
+    def test_new_drawing_clears_redo(self):
+        canvas = Canvas(white_pixmap())
+        draw(canvas, "rect", (20, 20), (100, 80))
+        canvas.undo()
+        draw(canvas, "line", (10, 10), (50, 50))
+        canvas.redo()
+        self.assertEqual(canvas.annotation_count(), 1)
+
+    def test_arrow_head_is_filled(self):
+        canvas = Canvas(white_pixmap())
+        canvas.color = QColor("#ff0000")
+        canvas.width = 8
+        draw(canvas, "arrow", (20, 60), (150, 60))
+        image = canvas.render_image()
+        # Kurz hinter der Pfeilspitze, neben der Mittellinie, ist die Spitze ausgefüllt
+        self.assertEqual(image.pixelColor(140, 64), QColor("#ff0000"))
+
+    def test_badges_are_numbered_in_order(self):
+        canvas = Canvas(white_pixmap())
+        canvas.tool = "badge"
+        for x in (30, 80, 130):
+            canvas.begin(QPointF(x, 60))
+            canvas.end(QPointF(x, 60))
+        numbers = [e[1].number for e in canvas._history if e[0] == "item"]
+        self.assertEqual(numbers, [1, 2, 3])
+
+    def test_pixelate_changes_pixels_into_blocks(self):
+        pixmap = QPixmap(100, 100)
+        image = QImage(100, 100, QImage.Format.Format_ARGB32)
+        for x in range(100):
+            for y in range(100):
+                image.setPixelColor(x, y, QColor("black") if (x + y) % 2 else QColor("white"))
+        pixmap = QPixmap.fromImage(image)
+        canvas = Canvas(pixmap)
+        canvas.width = 5
+        draw(canvas, "pixelate", (10, 10), (90, 90))
+        self.assertEqual(canvas.annotation_count(), 1)
+        out = canvas.render_image()
+        self.assertEqual(out.pixelColor(40, 40), out.pixelColor(41, 40))
+        self.assertNotEqual(out.pixelColor(40, 40), QColor("white"))
+
+    def test_crop_shrinks_output_and_undo_restores_it(self):
+        canvas = Canvas(white_pixmap(200, 120))
+        draw(canvas, "crop", (10, 10), (110, 70))
+        image = canvas.render_image()
+        self.assertEqual((image.width(), image.height()), (100, 60))
+        canvas.undo()
+        image = canvas.render_image()
+        self.assertEqual((image.width(), image.height()), (200, 120))
+        canvas.redo()
+        self.assertEqual(canvas.render_image().width(), 100)
+
+    def test_delete_selected_is_undoable(self):
+        canvas = Canvas(white_pixmap())
+        draw(canvas, "rect", (20, 20), (100, 80))
+        item = canvas._history[0][1]
+        item.setSelected(True)
+        canvas.delete_selected()
+        self.assertEqual(canvas.annotation_count(), 0)
+        canvas.undo()
+        self.assertEqual(canvas.annotation_count(), 1)
+
+
 class SaveTest(unittest.TestCase):
     def test_save_writes_png_with_annotation(self):
         with tempfile.TemporaryDirectory() as folder:
