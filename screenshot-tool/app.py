@@ -11,11 +11,12 @@ import tempfile
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QTimer, Qt, Signal
-from PySide6.QtGui import QAction, QColor, QGuiApplication, QIcon, QPainter, QPen, QPixmap
+from PySide6.QtGui import QAction, QGuiApplication, QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from cursor_highlight import CursorHighlight
 from editor import EditorWindow
+from resources import resource_path
 
 HOTKEY_AREA = "<ctrl>+<alt>+s"
 HOTKEY_CURSOR = "<ctrl>+<alt>+m"
@@ -41,17 +42,7 @@ def parse_args():
 
 
 def make_icon():
-    pixmap = QPixmap(64, 64)
-    pixmap.fill(Qt.GlobalColor.transparent)
-    painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    painter.setPen(QPen(QColor("#ff3b30"), 6))
-    painter.drawRect(10, 14, 44, 36)
-    painter.setPen(Qt.PenStyle.NoPen)
-    painter.setBrush(QColor(255, 214, 10, 220))
-    painter.drawEllipse(24, 22, 24, 24)
-    painter.end()
-    return QIcon(pixmap)
+    return QIcon(str(resource_path("assets/logo.png")))
 
 
 def capture(area):

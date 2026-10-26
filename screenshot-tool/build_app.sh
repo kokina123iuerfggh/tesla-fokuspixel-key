@@ -5,9 +5,10 @@ cd "$(dirname "$0")"
 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt pyinstaller
+pip install -r requirements.txt pyinstaller pillow
 
-pyinstaller --noconfirm --windowed --name "Bildschirm-Werkzeug" app.py
+pyinstaller --noconfirm --windowed --name "Bildschirm-Werkzeug" \
+  --icon assets/icon.png --add-data "assets:assets" app.py
 
 APP="dist/Bildschirm-Werkzeug.app"
 # Kein Dock-Symbol, nur das Symbol in der Menüleiste

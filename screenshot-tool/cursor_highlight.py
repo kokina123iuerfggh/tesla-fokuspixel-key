@@ -50,7 +50,7 @@ class CursorHighlight(QWidget):
         if self._pressed:
             fill, ring = QColor(255, 59, 48, 120), QColor(255, 59, 48, 230)
         else:
-            fill, ring = QColor(255, 214, 10, 90), QColor(255, 214, 10, 220)
+            fill, ring = QColor(18, 216, 90, 90), QColor(31, 68, 255, 230)
         painter.setBrush(fill)
         painter.setPen(QPen(ring, 3))
         center = SIZE // 2

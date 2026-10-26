@@ -44,23 +44,26 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from resources import resource_path
+
 MIN_DRAG = 3
 MIN_CROP = 8
 
-GOLD = "#d4af37"
-PALETTE = [GOLD, "#ff3b30", "#ff9500", "#ffd60a", "#34c759", "#0a84ff", "#bf5af2", "#ffffff", "#000000"]
+ACCENT = "#12d85a"  # Grün aus dem Fokus-Pixel-Logo
+ACCENT_BLUE = "#1f44ff"  # Blau aus dem Logo
+PALETTE = [ACCENT, ACCENT_BLUE, "#ff3b30", "#ff9500", "#ffd60a", "#bf5af2", "#ffffff", "#000000"]
 
 STYLE = f"""
 QMainWindow, QWidget#root {{ background: #0e0f11; }}
 QFrame#panel {{ background: #17181b; border: 1px solid #2a2b30; border-radius: 16px; }}
 QToolButton {{ background: transparent; border: none; border-radius: 8px; padding: 5px; color: #e8e8ea; font-size: 18px; }}
 QToolButton:hover {{ background: #26272c; }}
-QToolButton:checked {{ background: {GOLD}; }}
+QToolButton:checked {{ background: {ACCENT}; }}
 QPushButton {{ background: #222327; color: #e8e8ea; border: 1px solid #2f3036; border-radius: 10px; padding: 7px 16px; }}
 QPushButton:hover {{ background: #2c2d33; }}
-QPushButton#primary {{ background: {GOLD}; color: #1a1a1a; font-weight: 600; border: none; }}
+QPushButton#primary {{ background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 {ACCENT_BLUE}, stop:1 {ACCENT}); color: #ffffff; font-weight: 600; border: none; }}
 QSlider::groove:horizontal {{ height: 3px; background: #3a3b41; border-radius: 1px; }}
-QSlider::handle:horizontal {{ background: {GOLD}; width: 14px; height: 14px; margin: -6px 0; border-radius: 7px; }}
+QSlider::handle:horizontal {{ background: {ACCENT}; width: 14px; height: 14px; margin: -6px 0; border-radius: 7px; }}
 QLabel {{ color: #e8e8ea; }}
 QStatusBar {{ color: #9a9ba1; }}
 """
@@ -178,7 +181,7 @@ class Canvas(QGraphicsView):
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         self.tool = "arrow"
-        self.color = QColor(GOLD)
+        self.color = QColor(ACCENT)
         self.width = 8
 
         # Einträge: ("item", item) | ("delete", item) | ("crop", altes_rect, neues_rect)
@@ -467,6 +470,7 @@ class EditorWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Screenshot bearbeiten")
         self.setStyleSheet(STYLE)
+        self.setWindowIcon(QIcon(str(resource_path("assets/icon.png"))))
         self.save_dir = Path(save_dir)
         self.canvas = Canvas(pixmap)
         self.canvas.setFrameShape(QFrame.Shape.NoFrame)
@@ -568,6 +572,14 @@ class EditorWindow(QMainWindow):
         outer.addLayout(row)
 
         bottom = QHBoxLayout()
+        logo = QLabel()
+        logo.setObjectName("logo")
+        logo_pixmap = QPixmap(str(resource_path("assets/logo.png")))
+        if not logo_pixmap.isNull():
+            logo.setPixmap(
+                logo_pixmap.scaledToHeight(52, Qt.TransformationMode.SmoothTransformation)
+            )
+        bottom.addWidget(logo)
         bottom.addStretch(1)
         discard = QPushButton("Verwerfen")
         discard.clicked.connect(self.close)
