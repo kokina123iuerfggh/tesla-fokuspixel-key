@@ -90,7 +90,19 @@ def start_mouse_watcher(bridge):
         return None
 
 
+def selftest():
+    """Prüft, ob alle Bausteine in der gebauten App vorhanden sind (ohne Oberfläche)."""
+    import PySide6
+    import pynput.keyboard
+    import pynput.mouse
+
+    print("Selbsttest ok: PySide6", PySide6.__version__)
+    return 0
+
+
 def main():
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
     args = parse_args()
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
