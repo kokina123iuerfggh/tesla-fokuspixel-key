@@ -3,7 +3,20 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-python3 -m venv .venv
+PY=""
+for version in 3.12 3.13 3.11; do
+  if command -v "python$version" >/dev/null 2>&1; then
+    PY="python$version"
+    break
+  fi
+done
+if [ -z "$PY" ]; then
+  echo "Kein passendes Python gefunden. Bitte installieren: brew install python@3.12"
+  exit 1
+fi
+echo "Nutze $PY"
+
+"$PY" -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt pyinstaller pillow
 

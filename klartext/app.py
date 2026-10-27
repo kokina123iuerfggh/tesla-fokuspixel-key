@@ -227,7 +227,22 @@ def start_listener(controller, settings):
     return listener
 
 
+def selftest():
+    """Prüft, ob alle Bausteine in der gebauten App vorhanden sind (ohne Oberfläche und Mikrofon)."""
+    import ctranslate2
+    import faster_whisper
+    import numpy
+    import onnxruntime
+    import pynput
+    import sounddevice
+
+    print("Selbsttest ok:", faster_whisper.__name__, ctranslate2.__version__, numpy.__version__)
+    return 0
+
+
 def main():
+    if "--selftest" in sys.argv:
+        sys.exit(selftest())
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     app.setQuitOnLastWindowClosed(False)
